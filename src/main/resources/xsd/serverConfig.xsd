@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="config">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="checkUrl" type="xs:string"/>
+                <xs:element maxOccurs="unbounded" name="server-group" type="server-group_type"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="server-group_type">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" name="server" type="server_type"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="l4-link" type="name-link_type"/>
+            <xs:element maxOccurs="unbounded" name="port-info" type="port-info_type"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="server_type">
+        <xs:sequence>
+            <xs:element name="service" type="xs:string" minOccurs="0"/>
+            <xs:element name="server" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="name-link_type">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element minOccurs="0" name="link" type="xs:anyURI"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="port-info_type">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" name="port">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:int">
+                            <xs:attribute name="secure" type="xs:boolean"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

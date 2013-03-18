@@ -1,0 +1,179 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
+    <parent>
+        <groupId>org.jasig.parent</groupId>
+        <artifactId>jasig-parent</artifactId>
+        <version>34</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>edu.wisc.mum</groupId>
+    <artifactId>mumstatus</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>Server Status</name>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceVersion>1.7</project.build.sourceVersion>
+        <project.build.targetVersion>1.7</project.build.targetVersion>
+        
+        <jaxb2basicsVersion>0.6.4</jaxb2basicsVersion>
+        
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jasig.portlet.utils</groupId>
+            <artifactId>portlet-ws-util</artifactId>
+            <version>1.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jasig.resourceserver</groupId>
+            <artifactId>resource-server-content</artifactId>
+            <version>1.0.29</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+            <version>${jaxb2basicsVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>3.2.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.10</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+              <groupId>org.jvnet.jaxb2.maven2</groupId>
+              <artifactId>maven-jaxb2-plugin</artifactId>
+              <version>0.8.3</version>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>generate</goal>
+                  </goals>
+                </execution>
+              </executions>
+              <configuration>
+                <specVersion>2.1</specVersion>
+                <bindingDirectory>src/main/binding</bindingDirectory>
+                <schemaDirectory>src/main/resources/xsd</schemaDirectory>
+                <extension>true</extension>
+                <args>
+                  <arg>-XtoString</arg>
+                  <arg>-Xequals</arg>
+                  <arg>-XhashCode</arg>
+                  <arg>-Xdefault-value</arg>
+                  <arg>-Xinheritance</arg>
+                  <arg>-no-header</arg>
+                  <arg>-readOnly</arg>
+                  <arg>-mark-generated</arg>
+                </args>
+                <plugins>
+                  <plugin>
+                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                    <artifactId>jaxb2-basics</artifactId>
+                    <version>${jaxb2basicsVersion}</version>
+                  </plugin>
+                  <plugin>
+                    <groupId>org.jvnet.jaxb2_commons</groupId>
+                    <artifactId>jaxb2-default-value</artifactId>
+                    <version>1.1</version>
+                  </plugin>
+                </plugins>
+              </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webXml>${pom.basedir}/target/jspweb.xml</webXml>
+                    <overlays>
+                        <overlay>
+                            <groupId>org.jasig.resourceserver</groupId>
+                            <artifactId>resource-server-content</artifactId>
+                            <includes>
+                                <include>rs/jquery/1.4.2/</include>
+                            </includes>
+                        </overlay>
+                    </overlays>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo.jspc</groupId>
+                <artifactId>jspc-maven-plugin</artifactId>
+                <version>2.0-alpha-3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <!-- Use the Tomcat 6 JSP compiler -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo.jspc</groupId>
+                        <artifactId>jspc-compiler-tomcat6</artifactId>
+                        <version>2.0-alpha-3</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

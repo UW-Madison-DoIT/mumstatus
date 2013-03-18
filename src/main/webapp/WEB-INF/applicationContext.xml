@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:task="http://www.springframework.org/schema/task"
+  xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="edu.wisc.mum.status.dao"/>
+    <context:property-override location="/WEB-INF/context.properties"/>
+    
+    <task:scheduler id="scheduler" pool-size="10"/>
+    
+    <task:executor id="executorWithCallerRunsPolicy"
+               pool-size="100" queue-capacity="1000"
+               rejection-policy="CALLER_RUNS"/>
+               
+    <bean class="org.springframework.web.client.RestTemplate">
+        <property name="requestFactory">
+            <bean class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+                <property name="httpClient" ref="httpClient"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="httpClient" class="org.jasig.apache.http.impl.client.ResponseHeaderHandlingHttpClient" depends-on="httpConnectionParamBean, clientParamBean">
+        <constructor-arg ref="httpConnectionManager" />
+        <constructor-arg ref="httpParams" />
+    </bean>
+    
+    <bean id="httpConnectionManager" class="org.jasig.apache.http.impl.conn.CleanShutdownPoolingClientConnectionManager" destroy-method="shutdown">
+        <constructor-arg>
+            <bean class="org.jasig.apache.http.conn.scheme.SchemeRegistryFactoryBean">
+                <property name="schemes">
+                    <set>
+                        <bean class="org.apache.http.conn.scheme.Scheme">
+                            <constructor-arg value="https" />
+                            <constructor-arg value="443" />
+                            <constructor-arg>
+                                <bean class="org.apache.http.conn.ssl.SSLSocketFactory">
+                                    <constructor-arg>
+                                        <bean class="org.jasig.apache.http.conn.ssl.TrustAllStrategy" />
+                                    </constructor-arg>
+                                    <constructor-arg>
+                                        <bean class="org.apache.http.conn.ssl.AllowAllHostnameVerifier" />
+                                    </constructor-arg>
+                                </bean>
+                            </constructor-arg>
+                        </bean>
+                        <bean class="org.apache.http.conn.scheme.Scheme">
+                            <constructor-arg value="http" />
+                            <constructor-arg value="80" />
+                            <constructor-arg>
+                                <bean class="org.apache.http.conn.scheme.PlainSocketFactory" />
+                            </constructor-arg>
+                        </bean>
+                    </set>
+                </property>
+            </bean>
+        </constructor-arg>
+        <property name="defaultMaxPerRoute" value="1000" />
+        <property name="maxTotal" value="1000" />
+    </bean>
+    <bean id="httpParams" class="org.apache.http.params.BasicHttpParams" />
+    <bean id="httpConnectionParamBean" class="org.apache.http.params.HttpConnectionParamBean">
+        <constructor-arg index="0">
+            <ref bean="httpParams" />
+        </constructor-arg>
+        <property name="connectionTimeout" value="5000" />
+        <property name="soTimeout" value="30000" />
+        <property name="staleCheckingEnabled" value="true" />
+      </bean>
+    <bean id="clientParamBean" class="org.apache.http.client.params.ClientParamBean">
+        <constructor-arg index="0">
+            <ref bean="httpParams" />
+        </constructor-arg>
+        <property name="cookiePolicy" value="ignoreCookies" />
+    </bean>    
+</beans>
