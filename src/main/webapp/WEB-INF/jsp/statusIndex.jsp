@@ -75,8 +75,6 @@
                   return tip.clone();
                 }
               });
-            
-            //updateDateAge($(this));
         });
 
         function updateDateAge(dateAgingPair) {
