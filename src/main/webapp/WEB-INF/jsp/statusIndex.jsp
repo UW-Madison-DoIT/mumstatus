@@ -12,11 +12,11 @@
         <meta http-equiv="refresh" content="${refresh}">
     </c:if>
     
-    <script type="text/javascript" language="javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" language="javascript" src="${pageContext.request.contextPath}/js/jquery.qtip-1.0-pre.js"></script>
+    <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" language="javascript" src="//code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
     
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
     <link href="${pageContext.request.contextPath}/css/mumstatus.css" rel="stylesheet" type="text/css" />
-    
     
     <script type="text/javascript">
         var msPerSecond = 1000;
@@ -44,71 +44,18 @@
                     dateAgingPair.removeClass('FAIL');
                 }
             }, 1000);
-
-            //Define out custom tool tip styles to match the OK/WARN/FAIL CSS used for the table cells
-            $.fn.qtip.styles.OK = {
-                width: {
-                    max: 500
-                },
-                background: 'lightgreen',
-                color: 'black',
-                border: {
-                    width: 1,
-                    radius: 2,
-                    color: '#000000'
-                },
-                tip: 'topLeft',
-                name: 'dark' // Inherit the rest of the attributes from the preset dark style
-            };
-            $.fn.qtip.styles.WARN = {
-                background: 'yellow',
-                name: 'OK' // Inherit the rest of the attributes from the OK style
-            };
-            $.fn.qtip.styles.FAIL = {
-                background: 'red',
-                color: 'white',
-                name: 'OK' // Inherit the rest of the attributes from the OK style
-            };
-
-            //Add the tooltips
-            $('.serverGroup .server td .tooltip').each(function() {
-                var tipTarget = $(this).parent();
-                
-                var style = 'FAIL';
-                if (tipTarget.hasClass('OK')) {
-                    style = 'OK';
+            
+            $( document ).tooltip({
+                items: ".hasToolTip",
+                content: function() {
+                  var element = $( this );
+                  updateDateAge(element);
+                  var tip = element.find(".tooltip");
+                  return tip.clone();
                 }
-                else if (tipTarget.hasClass('WARN')) {
-                    style = 'WARN';
-                }
-                
-                tipTarget.qtip({
-                    content: $(this),
-                    delay: 50,
-                    style: {
-                        name: style,
-                        tip: 'topLeft'
-                    },
-                    api: {
-                        beforeContentUpdate: function() {
-                            //remove the old tip content before adding the new content
-                            $(this.elements.content).find(".tooltip").remove();
-                        },
-                        beforeShow: function() {
-                            var targetElement = $(this.elements.target);
-                            
-                            //Update the date age info before showing the tip
-                            targetElement.find('.dateAgingPair').each(function() {
-                                updateDateAge($(this));
-                            });
-
-                            //Update the tool tip content
-                            this.updateContent(targetElement.find('.tooltip'));
-                            return true;
-                        }
-                    }
-                });
-            });
+              });
+            
+            //updateDateAge($(this));
         });
 
         function updateDateAge(dateAgingPair) {
@@ -158,13 +105,16 @@
         }
     </script>
 </head>
-<body>
+<body style="zoom: ${zoom}">
 <div id="header">
    <small>Refresh:</small> 
    <span class="refreshChoices">
       <c:choose>
           <c:when test="${! empty refresh}">
-              <a href="${pageContext.request.contextPath}" class="refreshChoice">OFF</a>
+              <c:url var="refreshOff" value="index.jsp">
+                <c:param name="zoom">${zoom}</c:param>
+              </c:url>
+              <a href="${refreshOff}" class="refreshChoice">OFF</a>
           </c:when>
           <c:otherwise>
               <a class="refreshChosen">OFF</a>
@@ -172,7 +122,11 @@
       </c:choose>
       <c:choose>
           <c:when test="${refresh != '15'}">
-              <a href="${pageContext.request.contextPath}?refresh=15" class="refreshChoice">15</a>
+              <c:url var="refresh15" value="index.jsp">
+                <c:param name="zoom">${zoom}</c:param>
+                <c:param name="refresh">15</c:param>
+              </c:url>
+              <a href="${refresh15}" class="refreshChoice">15</a>
           </c:when>
           <c:otherwise>
               <a class="refreshChosen">15</a>
@@ -180,18 +134,14 @@
       </c:choose>
       <c:choose>
           <c:when test="${refresh != '30'}">
-              <a href="${pageContext.request.contextPath}?refresh=30" class="refreshChoice">30</a>
+              <c:url var="refresh30" value="index.jsp">
+                <c:param name="zoom">${zoom}</c:param>
+                <c:param name="refresh">30</c:param>
+              </c:url>
+              <a href="${refresh30}" class="refreshChoice">30</a>
           </c:when>
           <c:otherwise>
               <a class="refreshChosen">30</a>
-          </c:otherwise>
-      </c:choose>
-      <c:choose>
-          <c:when test="${refresh != '60'}">
-              <a href="${pageContext.request.contextPath}?refresh=60" class="refreshChoice">60</a>
-          </c:when>
-          <c:otherwise>
-              <a class="refreshChosen">60</a>
           </c:otherwise>
       </c:choose>
     </span>

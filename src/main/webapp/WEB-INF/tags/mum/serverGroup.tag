@@ -54,7 +54,7 @@
                 <c:forEach var="port" items="${portInfo.ports}">
                     <c:set var="serverKey" value="${serverGroup.name}.${server.service}.${port.value}" />
                     <c:set var="serverResponse" value="${serverResponses[serverKey]}" />
-                    <td class="httpResponse ${empty serverResponse ? 'FAIL' : serverResponse.status}">
+                    <td class="httpResponse ${empty serverResponse ? 'FAIL' : serverResponse.status} hasToolTip">
                         <div class="tooltip">
                             <table>
                                 <tr>
@@ -83,7 +83,7 @@
             <c:set var="hostMonitorLog" value="${monitorLogs[serverKey]}" />
             <c:choose>
                 <c:when test="${! empty monitorStatus}">
-                    <td class="monitorStatus ${status:sand(monitorStatus.durationStatus, monitorLogsStatus[serverKey])}">
+                    <td class="monitorStatus ${status:sand(monitorStatus.durationStatus, monitorLogsStatus[serverKey])} hasToolTip">
                         <c:if test="${! empty hostMonitorLog}">
                             <div class="tooltip">
                                 <table>

@@ -176,8 +176,8 @@
     <server-group>
         <name>PREDEV</name>
         <server>
-            <service>my-predev.doit.wisc.edu</service>
-            <server>my-predev.doit.wisc.edu</server>
+            <service>my-predev4.doit.wisc.edu</service>
+            <server>my-predev4.doit.wisc.edu</server>
         </server>
         <port-info>
             <name>Madison</name>

@@ -46,7 +46,8 @@ public class StatusController {
 
     @RequestMapping("/index.jsp")
     public ModelAndView statusIndex(
-            @RequestParam(value = "refresh", required = false) Integer refresh) {
+            @RequestParam(value = "refresh", required = false) Integer refresh,
+            @RequestParam(value = "zoom", required = false) Double zoom) {
         final long start = System.currentTimeMillis();
         
         final Map<String, Object> model = new LinkedHashMap<String, Object>();
@@ -71,7 +72,11 @@ public class StatusController {
         if (refresh != null && refresh < 5) {
             refresh = 5;
         }
+        if (zoom == null) {
+            zoom = 1.0;
+        }
         model.put("refresh", refresh);
+        model.put("zoom", zoom);
         
         return new ModelAndView("statusIndex", model);
     }
