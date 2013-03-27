@@ -33,10 +33,10 @@
         <meta http-equiv="refresh" content="${refresh}">
     </c:if>
     
-    <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" language="javascript" src="//code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <script type="text/javascript" language="javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" language="javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" />
     <link href="${pageContext.request.contextPath}/css/mumstatus.css" rel="stylesheet" type="text/css" />
     
     <script type="text/javascript">
