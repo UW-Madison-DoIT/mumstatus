@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -17,6 +19,8 @@ import edu.wisc.mum.status.om.ServerResponse;
 
 @Service
 public class HttpServerResponseDao implements ServerResponseDao {
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private final Map<String, ServerResponse> results = new ConcurrentHashMap<String, ServerResponse>();
     private final Map<String, ServerResponse> readOnlyResults = Collections.unmodifiableMap(results);
     
@@ -44,6 +48,8 @@ public class HttpServerResponseDao implements ServerResponseDao {
         serverResponse.setStatusCode(result.getStatusCode().value());
         serverResponse.setStatusReasonPhrase(result.getStatusCode().getReasonPhrase());
         serverResponse.setTimestamp(new Date());
+        
+        logger.debug("Checked server {} and got {}", key, serverResponse);
         
         results.put(key.toString(), serverResponse);
     }

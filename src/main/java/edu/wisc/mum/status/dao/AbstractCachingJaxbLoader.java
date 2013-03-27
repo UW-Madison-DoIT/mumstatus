@@ -82,9 +82,9 @@ public abstract class AbstractCachingJaxbLoader<T> implements InitializingBean, 
     public void afterPropertiesSet() throws Exception {
         //Setup file watcher
         final URI xmlUri = this.mappedXmlResource.getURI();
-        final Path xmlPath = Paths.get(xmlUri);
+        final Path xmlParentPath = Paths.get(xmlUri).getParent();
         watchService = FileSystems.getDefault().newWatchService();
-        xmlPath.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
+        xmlParentPath.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
     }
     
     @Override
@@ -97,24 +97,31 @@ public abstract class AbstractCachingJaxbLoader<T> implements InitializingBean, 
      */
     protected final T getUnmarshalledObject() {
         final WatchKey changedKey = watchService.poll();
-        if (changedKey != null || this.unmarshalledObject == null) {
-            this.lock.writeLock().lock();
-            try {
-                this.unmarshalledObject = readAndUnmarshall();
-                return this.unmarshalledObject;
+        try {
+            if (changedKey != null || this.unmarshalledObject == null) {
+                this.lock.writeLock().lock();
+                try {
+                    this.unmarshalledObject = readAndUnmarshall();
+                    return this.unmarshalledObject;
+                }
+                finally {
+                    this.lock.writeLock().unlock();
+                }
             }
-            finally {
-                this.lock.writeLock().unlock();
+            else {
+                this.lock.readLock().lock();
+                try {
+                    this.logger.trace("Returning cached instance of {}", this.loadedType.getName());
+                    return this.unmarshalledObject;
+                }
+                finally {
+                    this.lock.readLock().unlock();
+                }
             }
         }
-        else {
-            this.lock.readLock().lock();
-            try {
-                this.logger.trace("Returning cached instance of {}", this.loadedType.getName());
-                return this.unmarshalledObject;
-            }
-            finally {
-                this.lock.readLock().unlock();
+        finally {
+            if (changedKey != null) {
+                changedKey.reset();
             }
         }
     }

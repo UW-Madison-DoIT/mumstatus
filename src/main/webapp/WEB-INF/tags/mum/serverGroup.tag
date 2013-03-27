@@ -5,21 +5,21 @@
 
 <%@ tag isELIgnored="false" %>
 
-<%@ attribute name="serverGroup" required="true" type="edu.wisc.mum.status.om.config.ServerGroupType" %>
+<%@ attribute name="serverGroup" required="true" type="edu.wisc.mum.status.xom.config.ServerGroupType" %>
 
 <h3>${serverGroup.name}</h3>
-<c:if test="${! empty serverGroup.l4Link}">
+<c:if test="${! empty serverGroup.l4Links}">
    L4 Stats for: 
-    <c:forEach var="l4Link" items="${serverGroup.l4Link}" varStatus="l4LinkStatus">
+    <c:forEach var="l4Link" items="${serverGroup.l4Links}" varStatus="l4LinkStatus">
         <a href="${l4Link.link}">${l4Link.name}</a><c:if test="${!l4LinkStatus.last}">&nbsp;&nbsp;</c:if>
     </c:forEach>
 </c:if>
 <table class="serverGroup">
     <caption align="bottom">
         <c:set var="portCount" value="0" />
-        <c:forEach var="portInfo" items="${serverGroup.portInfo}" varStatus="portInfoStatus">
+        <c:forEach var="portInfo" items="${serverGroup.portInfos}" varStatus="portInfoStatus">
             ${portInfo.name}:
-            <c:forEach var="port" items="${portInfo.port}" varStatus="portStatus">
+            <c:forEach var="port" items="${portInfo.ports}" varStatus="portStatus">
                 <c:set var="portCount" value="${portCount + 1}" />
                 ${port.value}<c:if test="${!portStatus.last}">/</c:if>
             </c:forEach>
@@ -36,8 +36,8 @@
     </tr>
     <tr>
         <th>HOST</th>
-        <c:forEach var="portInfo" items="${serverGroup.portInfo}">
-            <c:forEach var="port" items="${portInfo.port}">
+        <c:forEach var="portInfo" items="${serverGroup.portInfos}">
+            <c:forEach var="port" items="${portInfo.ports}">
                 <th>${port.value}</th>
             </c:forEach>
         </c:forEach>
@@ -47,11 +47,11 @@
         <th></th>
         <th>Ver.</th>
     </tr>
-    <c:forEach var="server" items="${serverGroup.server}">
+    <c:forEach var="server" items="${serverGroup.servers}">
         <tr class="server">
             <td><a href="http://${server.service}/">${fn:substringBefore(server.service, '.')}</a>/${fn:substringBefore(server.server, '.')}</td>
-            <c:forEach var="portInfo" items="${serverGroup.portInfo}">
-                <c:forEach var="port" items="${portInfo.port}">
+            <c:forEach var="portInfo" items="${serverGroup.portInfos}">
+                <c:forEach var="port" items="${portInfo.ports}">
                     <c:set var="serverKey" value="${serverGroup.name}.${server.service}.${port.value}" />
                     <c:set var="serverResponse" value="${serverResponses[serverKey]}" />
                     <td class="httpResponse ${empty serverResponse ? 'FAIL' : serverResponse.status}">
@@ -127,7 +127,6 @@
                     <td><a href="https://orca.doit.wisc.edu/orca/${fn:substringBefore(server.server, '.')}/">Orca</a></td>
                 </c:otherwise>
             </c:choose>
-            <td>${server.version}</td>
         </tr>
     </c:forEach>
 </table>

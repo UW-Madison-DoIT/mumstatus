@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="rs" uri="http://www.jasig.org/resource-server" %>
 <%@ taglib prefix="mum" tagdir="/WEB-INF/tags/mum" %>
 <%@ taglib prefix="status" uri="https://my-tools.doit.wisc.edu/tags/status" %>
 <!DOCTYPE html>
@@ -13,8 +12,7 @@
         <meta http-equiv="refresh" content="${refresh}">
     </c:if>
     
-    <rs:resourceURL var="jQueryPath" value="/rs/jquery/1.4.2/jquery-1.4.2.js"/>
-    <script type="text/javascript" language="javascript" src="${jQueryPath}"></script>
+    <script type="text/javascript" language="javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" language="javascript" src="${pageContext.request.contextPath}/js/jquery.qtip-1.0-pre.js"></script>
     
     <link href="${pageContext.request.contextPath}/css/mumstatus.css" rel="stylesheet" type="text/css" />
@@ -203,14 +201,14 @@
 </div>
 <div id="container">
 <div id="left">
-<c:forEach var="serverGroup" items="${config.serverGroup}">
+<c:forEach var="serverGroup" items="${config.serverGroups}">
     <c:if test="${serverGroup.name == 'Madison VIPs' || serverGroup.name == 'System VIPs' || serverGroup.name == 'PROD'}">
         <mum:serverGroup serverGroup="${serverGroup}" />
     </c:if>
 </c:forEach>
 </div>
 <div id="right">
-<c:forEach var="serverGroup" items="${config.serverGroup}">
+<c:forEach var="serverGroup" items="${config.serverGroups}">
     <c:if test="${serverGroup.name != 'Madison VIPs' && serverGroup.name != 'System VIPs' && serverGroup.name != 'PROD'}">
         <mum:serverGroup serverGroup="${serverGroup}" />
     </c:if>

@@ -23,7 +23,7 @@ public class HttpServerResponseManager {
         this.serverResponseDao = serverResponseDao;
     }
 
-    @Scheduled(fixedDelay = 30)
+    @Scheduled(fixedDelay = 30000)
     public void checkAllServers() {
         final Map<String, ServerInfoKey> pollUrls = configDao.getPollUrls();
         for (final Map.Entry<String, ServerInfoKey> pollUrl : pollUrls.entrySet()) {

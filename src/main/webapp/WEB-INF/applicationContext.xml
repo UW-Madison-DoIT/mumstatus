@@ -12,17 +12,26 @@
     <context:component-scan base-package="edu.wisc.mum.status.dao"/>
     <context:property-override location="/WEB-INF/context.properties"/>
     
-    <task:scheduler id="scheduler" pool-size="10"/>
-    
-    <task:executor id="executorWithCallerRunsPolicy"
+    <task:annotation-driven/>    
+    <task:scheduler id="mumStatusScheduler" pool-size="10"/>
+    <task:executor id="mumStatusExecutor"
                pool-size="100" queue-capacity="1000"
                rejection-policy="CALLER_RUNS"/>
+               
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
                
     <bean class="org.springframework.web.client.RestTemplate">
         <property name="requestFactory">
             <bean class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
                 <property name="httpClient" ref="httpClient"/>
             </bean>
+        </property>
+        <property name="errorHandler">
+            <bean class="edu.wisc.mum.status.dao.IgnoreAllResponseErrorHandler" />
         </property>
     </bean>
 
