@@ -116,7 +116,10 @@ public abstract class AbstractCachingJaxbLoader<T> implements InitializingBean, 
         try {
             if (changedKey != null || this.unmarshalledObject == null) {
                 //Read all pending events
-                final List<WatchEvent<?>> watchEvents = changedKey.pollEvents();
+                List<WatchEvent<?>> watchEvents = null;
+                if (changedKey != null) {
+                    watchEvents = changedKey.pollEvents();
+                }
                 
                 if (this.logger.isDebugEnabled()) {
                    if (this.unmarshalledObject == null) {
