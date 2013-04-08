@@ -59,15 +59,25 @@ public class HttpServerResponseDao implements ServerResponseDao {
     @Async
     public void checkServer(ServerInfoKey key, String url) {
         final long start = System.nanoTime();
-        final ResponseEntity<String> result = restOperations.getForEntity(url, String.class);
-        final long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-        
         final ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setDuration(duration);
-        serverResponse.setStatusCode(result.getStatusCode().value());
-        serverResponse.setStatusReasonPhrase(result.getStatusCode().getReasonPhrase());
-        serverResponse.setTimestamp(new Date());
-        
+        try {
+            final ResponseEntity<String> result = restOperations.getForEntity(url, String.class);
+            final long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+            
+            serverResponse.setDuration(duration);
+            serverResponse.setStatusCode(result.getStatusCode().value());
+            serverResponse.setStatusReasonPhrase(result.getStatusCode().getReasonPhrase());
+            serverResponse.setTimestamp(new Date());
+        }
+        catch (Exception e) {
+            final long duration = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+            
+            serverResponse.setDuration(duration);
+            serverResponse.setStatusCode(-1);
+            serverResponse.setStatusReasonPhrase(e.getMessage());
+            serverResponse.setTimestamp(new Date());
+        }
+           
         logger.debug("Checked server {} and got {}", key, serverResponse);
         
         results.put(key.toString(), serverResponse);

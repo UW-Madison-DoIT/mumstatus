@@ -26,8 +26,10 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -113,6 +115,18 @@ public abstract class AbstractCachingJaxbLoader<T> implements InitializingBean, 
         final WatchKey changedKey = watchService.poll();
         try {
             if (changedKey != null || this.unmarshalledObject == null) {
+                //Read all pending events
+                final List<WatchEvent<?>> watchEvents = changedKey.pollEvents();
+                
+                if (this.logger.isDebugEnabled()) {
+                   if (this.unmarshalledObject == null) {
+                       this.logger.debug("Performing first load of {}", this.loadedType.getName());
+                   }
+                   else {
+                       this.logger.debug("Load of {} triggered by WatchKey {} for events {}", this.loadedType.getName(), changedKey, watchEvents);
+                   }
+                }
+                
                 this.lock.writeLock().lock();
                 try {
                     this.unmarshalledObject = readAndUnmarshall();
