@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.wisc.mum</groupId>
     <artifactId>mumstatus</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>war</packaging>
 
     <name>Server Status</name>
@@ -25,7 +25,7 @@
         <connection>scm:git:git://github.com/UW-Madison-DoIT/mumstatus.git</connection>
         <developerConnection>scm:git:git@github.com:UW-Madison-DoIT/mumstatus.git</developerConnection>
         <url>https://github.com/UW-Madison-DoIT/mumstatus</url>
-      <tag>HEAD</tag>
+      <tag>mumstatus-1.0.1</tag>
   </scm>
     
     <properties>
