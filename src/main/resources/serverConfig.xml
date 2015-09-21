@@ -107,18 +107,6 @@
     <server-group>
         <name>QA</name>
         <server>
-            <service>qa1.my.wisc.edu</service>
-            <server>qa1.my.wisc.edu</server>
-        </server>
-        <server>
-            <service>qa2.my.wisc.edu</service>
-            <server>qa2.my.wisc.edu</server>
-        </server>
-        <server>
-            <service>qa3.my.wisc.edu</service>
-            <server>qa3.my.wisc.edu</server>
-        </server>
-        <server>
             <service>tmumapp8.doit.wisc.edu</service>
             <server>teti.doit.wisc.edu</server>
         </server>
@@ -138,14 +126,6 @@
             <name>Old-443</name>
             <link>https://stats.net.wisc.edu/layer4/10.128.9.37.MY-144.92.170.7-TCP443.html</link>
         </l4-link>
-        <l4-link>
-            <name>New-80</name>
-            <link>https://stats.net.wisc.edu/layer4/10.128.9.37.MY-144.92.170.57-TCP80.html</link>
-        </l4-link>
-        <l4-link>
-            <name>New-443</name>
-            <link>https://stats.net.wisc.edu/layer4/10.128.9.37.MY-144.92.170.57-TCP443.html</link>
-        </l4-link>
         <port-info>
             <name>Madison</name>
             <port>80</port>
@@ -153,47 +133,6 @@
         </port-info>
         <port-info>
             <name>System</name>
-            <port>80</port>
-            <port secure="true">443</port>
-        </port-info>
-    </server-group>
-    <server-group>
-        <name>TEST</name>
-        <server>
-            <service>test1.my.wisc.edu</service>
-            <server>test1.my.wisc.edu</server>
-        </server>
-        <server>
-            <service>test2.my.wisc.edu</service>
-            <server>test2.my.wisc.edu</server>
-        </server>
-        <l4-link>
-            <name>80</name>
-            <link>https://stats.net.wisc.edu/layer4/10.128.9.37.MY-144.92.170.57-TCP80.html</link>
-        </l4-link>
-        <l4-link>
-            <name>443</name>
-            <link>https://stats.net.wisc.edu/layer4/10.128.9.37.MY-144.92.170.57-TCP443.html</link>
-        </l4-link>
-        <port-info>
-            <name>Madison</name>
-            <port>80</port>
-            <port secure="true">443</port>
-        </port-info>
-        <port-info>
-            <name>System</name>
-            <port>80</port>
-            <port secure="true">443</port>
-        </port-info>
-    </server-group>
-    <server-group>
-        <name>PREDEV</name>
-        <server>
-            <service>predev.my.wisc.edu</service>
-            <server>predev.my.wisc.edu</server>
-        </server>
-        <port-info>
-            <name>Madison</name>
             <port>80</port>
             <port secure="true">443</port>
         </port-info>
