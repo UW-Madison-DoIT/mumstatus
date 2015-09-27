@@ -114,10 +114,6 @@
             <service>tmumapp9.doit.wisc.edu</service>
             <server>ramesses.doit.wisc.edu</server>
         </server>
-        <server>
-            <service>tmumapp10.doit.wisc.edu</service>
-            <server>horus.doit.wisc.edu</server>
-        </server>
         <l4-link>
             <name>Old-80</name>
             <link>https://stats.net.wisc.edu/layer4/10.128.9.37.MY-144.92.170.7-TCP80.html</link>
